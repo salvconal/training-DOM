@@ -54,4 +54,5 @@ let main = document.querySelector("#first");
 
 //Nombre del nodo en mayusuculas
 //  console.log(nav.firstElementChild.nodeName);
- console.log(nav.firstElementChild.firstChild.nextSibling.nextSibling.previousSibling);
+//  console.log(nav.firstElementChild.firstChild.nextSibling.nextSibling.previousSibling);
+
