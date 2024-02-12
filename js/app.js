@@ -5,10 +5,11 @@ window.addEventListener("load", () => {
     let close = alert.firstElementChild;
     let input = document.querySelector("#task");
     let arrow = document.querySelector(".arrow");
-    //let table = document.querySelector(."arrow");
-    close.addEventListener("click", () => {
-        alert.classList.add("dismissible");
-    });
+    let done = document.querySelectorAll(".fa-circle-check");
+    let trash = document.querySelectorAll(".fa-trash");
+    let edit = document.querySelectorAll(".fa-pencil");
+    let task = document.querySelectorAll(".task");
+
     input.addEventListener("focus", () => {
         document.addEventListener("keydown", (event) => {
             console.log(event.code);
@@ -19,6 +20,11 @@ window.addEventListener("load", () => {
             }
         });
     });
+
+    input.addEventListener("blur", () => {
+        input.setAttribute("placeholder", "add a new task");
+    });
+
     arrow.addEventListener("click", (e) => {
         //trim() se come los espacios al principio y al final del string
         if (input.value.trim() == "") {
@@ -40,9 +46,67 @@ window.addEventListener("load", () => {
             }
         }
     });
+    //Se le añade la clase dismissible para hacerla desaparecer.
+
+    done.forEach(item => {
+        item.addEventListener("click", (e) => {
+            deleteTask(e);
+        });
+    })
+    trash.forEach(item => {
+        item.addEventListener("click", (e) => {
+            removeRow(e);
+        });
+    });
+
+
+    edit.forEach(item => {
+        item.addEventListener("click", (e) => {
+            editTask(e, false);
+        });
+    });
+
+    task.forEach(item => {
+        item.addEventListener("focus", (e) => {
+            editTask(e, true);
+        });
+    });
+
+
 
 });
-//Se le añade la clase dismissible para hacerla desaparecer.
+
+let editTask = (e, onFocus) => {
+    if (onFocus) {
+        console.log(e.target);
+        e.target.classList.add("editable");
+
+    } else {
+        let editable = e.target.parentNode.parentNode.previousElementSibling.lastElementChild;
+        editable.classList.add("editable");
+        editable.focus();
+    }
+
+}
+
+let deleteTask = (e) => {
+    let task = e.target.nextElementSibling;
+    let text = task.innerHTML;
+    if (text.includes("<del>")) {
+        task.innerHTML = task.firstElementChild.textContent;
+        task.setAttribute("data-completed", "false")
+    } else {
+        task.innerHTML = `<del>${text}</del>`;
+        task.setAttribute("data-completed", "true")
+    }
+}
+
+let removeRow = (e) => {
+    e.target.parentNode.parentNode.parentNode.remove();
+}
+
+//REFACTORIZAMOS EL CODIGO ENCAPSULANDO LA FUNCION .
+
 const generateRow = (id, text) => {
     let newRow = document.createElement("tr");
     newRow.setAttribute("id", id);
@@ -57,5 +121,5 @@ const generateRow = (id, text) => {
                                 <i class="fa-solid fa-trash fa-stack-1x fa-inverse"></i></span></td>
             `;
     return newRow;
-
 };
+
